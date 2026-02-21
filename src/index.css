@@ -53,11 +53,6 @@
     --emerald: 142 71% 45%;
     --amber: 35 92% 55%;
     --sky: 210 100% 56%;
-
-    /* Glass tokens */
-    --glass-bg: 0 0% 100% / 0.05;
-    --glass-border: 0 0% 100% / 0.1;
-    --glass-highlight: 0 0% 100% / 0.08;
   }
 }
 
@@ -90,36 +85,13 @@
 
 @layer utilities {
   .glass-panel {
-    background: hsla(var(--glass-bg));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid hsla(var(--glass-border));
-  }
-  .glass-card {
-    background: hsla(0 0% 100% / 0.06);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid hsla(0 0% 100% / 0.1);
-    box-shadow: 0 8px 32px hsla(0 0% 0% / 0.3);
-  }
-  .glass-header {
-    background: hsla(0 0% 8% / 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid hsla(0 0% 100% / 0.08);
+    @apply bg-card/80 backdrop-blur-sm border border-border;
   }
   .gold-glow {
     box-shadow: 0 0 15px hsl(var(--gold) / 0.3);
   }
   .active-lesson {
-    @apply border-l-2 rounded-md;
+    @apply border-l-2 bg-muted/50;
     border-left-color: hsl(var(--gold));
-    background: hsla(var(--gold) / 0.1);
-  }
-  .glass-sidebar {
-    background: hsla(0 0% 9% / 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-left: 1px solid hsla(0 0% 100% / 0.08);
   }
 }

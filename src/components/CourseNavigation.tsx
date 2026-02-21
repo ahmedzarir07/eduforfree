@@ -22,9 +22,9 @@ export default function CourseNavigation({
           const catSubjects = subjects.filter((s) => s.category_id === cat.id);
           return (
             <AccordionItem key={cat.id} value={cat.id} className="border-none">
-              <AccordionTrigger className="px-3 py-2.5 rounded-lg hover:bg-muted/50 hover:no-underline text-sm font-medium transition-colors">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: cat.icon_color }} />
+              <AccordionTrigger className="px-3 py-2.5 rounded-lg hover:bg-surface-hover hover:no-underline text-sm font-medium">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.icon_color }} />
                   {cat.name}
                 </div>
               </AccordionTrigger>
@@ -34,9 +34,9 @@ export default function CourseNavigation({
                     const subChapters = chapters.filter((c) => c.subject_id === sub.id);
                     return (
                       <AccordionItem key={sub.id} value={sub.id} className="border-none">
-                        <AccordionTrigger className="px-3 py-2 rounded-md hover:bg-muted/40 hover:no-underline text-sm text-muted-foreground transition-colors">
+                        <AccordionTrigger className="px-3 py-2 rounded-md hover:bg-surface-hover hover:no-underline text-sm text-muted-foreground">
                           <div className="flex items-center gap-2">
-                            <BookOpen className="h-3.5 w-3.5 text-primary/70" />
+                            <BookOpen className="h-3.5 w-3.5 text-primary" />
                             {sub.name}
                           </div>
                         </AccordionTrigger>
@@ -46,9 +46,9 @@ export default function CourseNavigation({
                               const chapContent = content.filter((c) => c.chapter_id === chap.id);
                               return (
                                 <AccordionItem key={chap.id} value={chap.id} className="border-none">
-                                  <AccordionTrigger className="px-3 py-1.5 rounded-md hover:bg-muted/30 hover:no-underline text-xs text-muted-foreground transition-colors">
+                                  <AccordionTrigger className="px-3 py-1.5 rounded-md hover:bg-surface-hover hover:no-underline text-xs text-muted-foreground">
                                     <div className="flex items-center gap-2">
-                                      <FolderOpen className="h-3 w-3 text-accent/70" />
+                                      <FolderOpen className="h-3 w-3 text-accent" />
                                       {chap.name}
                                     </div>
                                   </AccordionTrigger>
@@ -58,16 +58,16 @@ export default function CourseNavigation({
                                         <button
                                           key={item.id}
                                           onClick={() => onSelectContent(item)}
-                                          className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-xs transition-all text-left ${
+                                          className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-xs transition-colors text-left ${
                                             activeContentId === item.id
-                                              ? 'active-lesson gold-glow text-foreground'
-                                              : 'hover:bg-muted/30 text-muted-foreground hover:text-foreground'
+                                              ? 'active-lesson gold-glow'
+                                              : 'hover:bg-surface-hover text-muted-foreground hover:text-foreground'
                                           }`}
                                         >
                                           {item.content_type === 'video' ? (
-                                            <Play className={`h-3 w-3 shrink-0 ${activeContentId === item.id ? 'text-gold' : 'text-primary/70'}`} />
+                                            <Play className="h-3 w-3 shrink-0 text-primary" />
                                           ) : (
-                                            <FileText className={`h-3 w-3 shrink-0 ${activeContentId === item.id ? 'text-gold' : 'text-info/70'}`} />
+                                            <FileText className="h-3 w-3 shrink-0 text-info" />
                                           )}
                                           <span className="flex-1 truncate">{item.title}</span>
                                           {item.duration && (
