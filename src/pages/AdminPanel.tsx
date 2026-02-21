@@ -12,15 +12,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { BookOpen, LogOut, Layers, FolderOpen, FileText, Video, Plus, Pencil, Trash2, ArrowLeft } from 'lucide-react';
+import { LogOut, Layers, FolderOpen, FileText, Video, Plus, Pencil, Trash2, ArrowLeft, BookOpen, GraduationCap, BarChart3, Eye } from 'lucide-react';
 
-// Reusable form dialog
 function FormDialog({ trigger, title, children, open, onOpenChange }: {
   trigger: React.ReactNode;
   title: string;
@@ -31,7 +30,7 @@ function FormDialog({ trigger, title, children, open, onOpenChange }: {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md glass-card border-0">
         <DialogHeader><DialogTitle>{title}</DialogTitle></DialogHeader>
         {children}
       </DialogContent>
@@ -50,25 +49,26 @@ function AdminCategories() {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [color, setColor] = useState('#10b981');
+  const [sortOrder, setSortOrder] = useState(0);
 
-  const reset = () => { setName(''); setDesc(''); setColor('#10b981'); setEditId(null); };
+  const reset = () => { setName(''); setDesc(''); setColor('#10b981'); setSortOrder(0); setEditId(null); };
 
   const handleSave = () => {
     const onSuccess = () => { setOpen(false); reset(); toast({ title: editId ? 'Updated' : 'Created' }); };
     const onError = (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' });
     if (editId) {
-      update.mutate({ id: editId, name, description: desc, icon_color: color }, { onSuccess, onError });
+      update.mutate({ id: editId, name, description: desc, icon_color: color, sort_order: sortOrder }, { onSuccess, onError });
     } else {
-      create.mutate({ name, description: desc, icon_color: color }, { onSuccess, onError });
+      create.mutate({ name, description: desc, icon_color: color, sort_order: sortOrder }, { onSuccess, onError });
     }
   };
 
-  const startEdit = (c: Category) => { setEditId(c.id); setName(c.name); setDesc(c.description || ''); setColor(c.icon_color); setOpen(true); };
+  const startEdit = (c: Category) => { setEditId(c.id); setName(c.name); setDesc(c.description || ''); setColor(c.icon_color); setSortOrder(c.sort_order); setOpen(true); };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-medium flex items-center gap-2"><Layers className="h-4 w-4 text-primary" /> Categories</h3>
+        <h3 className="font-medium flex items-center gap-2"><Layers className="h-4 w-4 text-primary" /> Categories ({categories.length})</h3>
         <FormDialog
           open={open}
           onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}
@@ -78,19 +78,23 @@ function AdminCategories() {
           <div className="space-y-3">
             <div><Label>Name</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
             <div><Label>Description</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} /></div>
-            <div><Label>Color</Label><Input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-10 w-20" /></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>Color</Label><Input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-10 w-full" /></div>
+              <div><Label>Sort Order</Label><Input type="number" value={sortOrder} onChange={(e) => setSortOrder(Number(e.target.value))} /></div>
+            </div>
             <Button onClick={handleSave} disabled={!name.trim()} className="w-full">{editId ? 'Update' : 'Create'}</Button>
           </div>
         </FormDialog>
       </div>
       <div className="space-y-2">
         {categories.map((c) => (
-          <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface">
+          <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg glass-panel">
             <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.icon_color }} />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{c.name}</p>
               {c.description && <p className="text-xs text-muted-foreground truncate">{c.description}</p>}
             </div>
+            <span className="text-[10px] text-muted-foreground">#{c.sort_order}</span>
             <button onClick={() => startEdit(c)} className="text-muted-foreground hover:text-foreground"><Pencil className="h-3.5 w-3.5" /></button>
             <button onClick={() => { del.mutate(c.id); toast({ title: 'Deleted' }); }} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
           </div>
@@ -113,25 +117,26 @@ function AdminSubjects() {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [sortOrder, setSortOrder] = useState(0);
 
-  const reset = () => { setName(''); setDesc(''); setCategoryId(''); setEditId(null); };
+  const reset = () => { setName(''); setDesc(''); setCategoryId(''); setSortOrder(0); setEditId(null); };
 
   const handleSave = () => {
     const onSuccess = () => { setOpen(false); reset(); toast({ title: editId ? 'Updated' : 'Created' }); };
     const onError = (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' });
     if (editId) {
-      update.mutate({ id: editId, name, description: desc, category_id: categoryId }, { onSuccess, onError });
+      update.mutate({ id: editId, name, description: desc, category_id: categoryId, sort_order: sortOrder }, { onSuccess, onError });
     } else {
-      create.mutate({ category_id: categoryId, name, description: desc }, { onSuccess, onError });
+      create.mutate({ category_id: categoryId, name, description: desc, sort_order: sortOrder }, { onSuccess, onError });
     }
   };
 
-  const startEdit = (s: Subject) => { setEditId(s.id); setName(s.name); setDesc(s.description || ''); setCategoryId(s.category_id); setOpen(true); };
+  const startEdit = (s: Subject) => { setEditId(s.id); setName(s.name); setDesc(s.description || ''); setCategoryId(s.category_id); setSortOrder(s.sort_order); setOpen(true); };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-medium flex items-center gap-2"><BookOpen className="h-4 w-4 text-primary" /> Subjects</h3>
+        <h3 className="font-medium flex items-center gap-2"><BookOpen className="h-4 w-4 text-primary" /> Subjects ({subjects.length})</h3>
         <FormDialog
           open={open}
           onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}
@@ -148,6 +153,7 @@ function AdminSubjects() {
             </div>
             <div><Label>Name</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
             <div><Label>Description</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} /></div>
+            <div><Label>Sort Order</Label><Input type="number" value={sortOrder} onChange={(e) => setSortOrder(Number(e.target.value))} /></div>
             <Button onClick={handleSave} disabled={!name.trim() || !categoryId} className="w-full">{editId ? 'Update' : 'Create'}</Button>
           </div>
         </FormDialog>
@@ -156,11 +162,12 @@ function AdminSubjects() {
         {subjects.map((s) => {
           const cat = categories.find((c) => c.id === s.category_id);
           return (
-            <div key={s.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface">
+            <div key={s.id} className="flex items-center gap-3 p-3 rounded-lg glass-panel">
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{s.name}</p>
                 <p className="text-xs text-muted-foreground truncate">{cat?.name}</p>
               </div>
+              <span className="text-[10px] text-muted-foreground">#{s.sort_order}</span>
               <button onClick={() => startEdit(s)} className="text-muted-foreground hover:text-foreground"><Pencil className="h-3.5 w-3.5" /></button>
               <button onClick={() => { del.mutate(s.id); toast({ title: 'Deleted' }); }} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
             </div>
@@ -174,9 +181,7 @@ function AdminSubjects() {
 
 function AdminChapters() {
   const { data: subjects = [] } = useSubjects();
-  const { data: chapters = [] } = useChapters(subjects[0]?.id);
   const [selectedSubject, setSelectedSubject] = useState('');
-  const filteredChapters = selectedSubject ? chapters.filter((c) => c.subject_id === selectedSubject) : [];
   const { data: allChapters = [] } = useChapters(selectedSubject || undefined);
   const create = useCreateChapter();
   const update = useUpdateChapter();
@@ -186,21 +191,22 @@ function AdminChapters() {
   const [editId, setEditId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
+  const [sortOrder, setSortOrder] = useState(0);
 
-  const reset = () => { setName(''); setDesc(''); setEditId(null); };
+  const reset = () => { setName(''); setDesc(''); setSortOrder(0); setEditId(null); };
 
   const handleSave = () => {
     if (!selectedSubject) return;
     const onSuccess = () => { setOpen(false); reset(); toast({ title: editId ? 'Updated' : 'Created' }); };
     const onError = (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' });
     if (editId) {
-      update.mutate({ id: editId, name, description: desc }, { onSuccess, onError });
+      update.mutate({ id: editId, name, description: desc, sort_order: sortOrder }, { onSuccess, onError });
     } else {
-      create.mutate({ subject_id: selectedSubject, name, description: desc }, { onSuccess, onError });
+      create.mutate({ subject_id: selectedSubject, name, description: desc, sort_order: sortOrder }, { onSuccess, onError });
     }
   };
 
-  const startEdit = (c: Chapter) => { setEditId(c.id); setName(c.name); setDesc(c.description || ''); setOpen(true); };
+  const startEdit = (c: Chapter) => { setEditId(c.id); setName(c.name); setDesc(c.description || ''); setSortOrder(c.sort_order); setOpen(true); };
 
   return (
     <div className="space-y-4">
@@ -215,6 +221,7 @@ function AdminChapters() {
           <div className="space-y-3">
             <div><Label>Name</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
             <div><Label>Description</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} /></div>
+            <div><Label>Sort Order</Label><Input type="number" value={sortOrder} onChange={(e) => setSortOrder(Number(e.target.value))} /></div>
             <Button onClick={handleSave} disabled={!name.trim()} className="w-full">{editId ? 'Update' : 'Create'}</Button>
           </div>
         </FormDialog>
@@ -225,11 +232,12 @@ function AdminChapters() {
       </Select>
       <div className="space-y-2">
         {allChapters.map((c) => (
-          <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface">
+          <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg glass-panel">
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{c.name}</p>
               {c.description && <p className="text-xs text-muted-foreground truncate">{c.description}</p>}
             </div>
+            <span className="text-[10px] text-muted-foreground">#{c.sort_order}</span>
             <button onClick={() => startEdit(c)} className="text-muted-foreground hover:text-foreground"><Pencil className="h-3.5 w-3.5" /></button>
             <button onClick={() => { del.mutate(c.id); toast({ title: 'Deleted' }); }} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
           </div>
@@ -259,23 +267,24 @@ function AdminContent() {
   const [duration, setDuration] = useState('');
   const [contentType, setContentType] = useState('video');
   const [desc, setDesc] = useState('');
+  const [sortOrder, setSortOrder] = useState(0);
 
-  const reset = () => { setTitle(''); setUrl(''); setDuration(''); setContentType('video'); setDesc(''); setEditId(null); };
+  const reset = () => { setTitle(''); setUrl(''); setDuration(''); setContentType('video'); setDesc(''); setSortOrder(0); setEditId(null); };
 
   const handleSave = () => {
     if (!selectedChapter) return;
     const onSuccess = () => { setOpen(false); reset(); toast({ title: editId ? 'Updated' : 'Created' }); };
     const onError = (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' });
     if (editId) {
-      update.mutate({ id: editId, title, url, duration, content_type: contentType, description: desc }, { onSuccess, onError });
+      update.mutate({ id: editId, title, url, duration, content_type: contentType, description: desc, sort_order: sortOrder }, { onSuccess, onError });
     } else {
-      create.mutate({ chapter_id: selectedChapter, title, url, duration, content_type: contentType, description: desc }, { onSuccess, onError });
+      create.mutate({ chapter_id: selectedChapter, title, url, duration, content_type: contentType, description: desc, sort_order: sortOrder }, { onSuccess, onError });
     }
   };
 
   const startEdit = (c: ContentItem) => {
     setEditId(c.id); setTitle(c.title); setUrl(c.url); setDuration(c.duration || '');
-    setContentType(c.content_type); setDesc(c.description || ''); setOpen(true);
+    setContentType(c.content_type); setDesc(c.description || ''); setSortOrder(c.sort_order); setOpen(true);
   };
 
   return (
@@ -300,8 +309,11 @@ function AdminContent() {
                 </SelectContent>
               </Select>
             </div>
-            <div><Label>URL / Embed Link</Label><Input value={url} onChange={(e) => setUrl(e.target.value)} /></div>
-            <div><Label>Duration</Label><Input value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="e.g. 15:30" /></div>
+            <div><Label>URL / Embed Link</Label><Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder={contentType === 'video' ? 'YouTube/Vimeo URL' : 'PDF or resource URL'} /></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>Duration</Label><Input value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="e.g. 15:30" /></div>
+              <div><Label>Sort Order</Label><Input type="number" value={sortOrder} onChange={(e) => setSortOrder(Number(e.target.value))} /></div>
+            </div>
             <div><Label>Description</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} /></div>
             <Button onClick={handleSave} disabled={!title.trim() || !url.trim()} className="w-full">{editId ? 'Update' : 'Create'}</Button>
           </div>
@@ -319,12 +331,16 @@ function AdminContent() {
       </div>
       <div className="space-y-2">
         {filteredContent.map((c) => (
-          <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface">
+          <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg glass-panel">
             {c.content_type === 'video' ? <Video className="h-4 w-4 text-primary shrink-0" /> : <FileText className="h-4 w-4 text-info shrink-0" />}
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{c.title}</p>
-              {c.duration && <p className="text-xs text-muted-foreground">{c.duration}</p>}
+              <div className="flex items-center gap-2">
+                {c.duration && <span className="text-xs text-muted-foreground">{c.duration}</span>}
+                <span className="text-[10px] text-muted-foreground">#{c.sort_order}</span>
+              </div>
             </div>
+            <a href={c.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-info"><Eye className="h-3.5 w-3.5" /></a>
             <button onClick={() => startEdit(c)} className="text-muted-foreground hover:text-foreground"><Pencil className="h-3.5 w-3.5" /></button>
             <button onClick={() => { del.mutate(c.id); toast({ title: 'Deleted' }); }} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
           </div>
@@ -343,14 +359,20 @@ export default function AdminPanel() {
   const { data: subjects = [] } = useSubjects();
   const { data: content = [] } = useAllContent();
 
+  const videoCount = content.filter(c => c.content_type === 'video').length;
+  const resourceCount = content.filter(c => c.content_type !== 'video').length;
+
   return (
     <div className="min-h-screen bg-background">
-      <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border bg-card">
+      <header className="glass-header sticky top-0 z-40 flex items-center justify-between px-4 md:px-6 py-3">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="gap-1.5">
             <ArrowLeft className="h-3.5 w-3.5" /> Dashboard
           </Button>
-          <span className="font-semibold text-sm">Admin Panel</span>
+          <div className="flex items-center gap-2">
+            <GraduationCap className="h-5 w-5 text-primary" />
+            <span className="font-semibold text-sm">Admin Panel</span>
+          </div>
         </div>
         <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 text-xs">
           <LogOut className="h-3.5 w-3.5" /> Logout
@@ -359,52 +381,50 @@ export default function AdminPanel() {
 
       <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6">
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Layers className="h-5 w-5 text-primary" />
-              </div>
-              <div><p className="text-2xl font-bold">{categories.length}</p><p className="text-xs text-muted-foreground">Categories</p></div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                <BookOpen className="h-5 w-5 text-accent" />
-              </div>
-              <div><p className="text-2xl font-bold">{subjects.length}</p><p className="text-xs text-muted-foreground">Subjects</p></div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="h-10 w-10 rounded-lg bg-info/10 flex items-center justify-center">
-                <Video className="h-5 w-5 text-info" />
-              </div>
-              <div><p className="text-2xl font-bold">{content.length}</p><p className="text-xs text-muted-foreground">Content Items</p></div>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="glass-card rounded-xl p-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-lg bg-primary/15 flex items-center justify-center">
+              <Layers className="h-5 w-5 text-primary" />
+            </div>
+            <div><p className="text-2xl font-bold">{categories.length}</p><p className="text-[10px] text-muted-foreground">Categories</p></div>
+          </div>
+          <div className="glass-card rounded-xl p-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-lg bg-accent/15 flex items-center justify-center">
+              <BookOpen className="h-5 w-5 text-accent" />
+            </div>
+            <div><p className="text-2xl font-bold">{subjects.length}</p><p className="text-[10px] text-muted-foreground">Subjects</p></div>
+          </div>
+          <div className="glass-card rounded-xl p-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-lg bg-info/15 flex items-center justify-center">
+              <Video className="h-5 w-5 text-info" />
+            </div>
+            <div><p className="text-2xl font-bold">{videoCount}</p><p className="text-[10px] text-muted-foreground">Videos</p></div>
+          </div>
+          <div className="glass-card rounded-xl p-4 flex items-center gap-3">
+            <div className="h-10 w-10 rounded-lg bg-gold/15 flex items-center justify-center">
+              <FileText className="h-5 w-5 text-gold" />
+            </div>
+            <div><p className="text-2xl font-bold">{resourceCount}</p><p className="text-[10px] text-muted-foreground">Resources</p></div>
+          </div>
         </div>
 
         {/* Management Tabs */}
-        <Card>
-          <CardContent className="p-4 md:p-6">
-            <Tabs defaultValue="categories">
-              <TabsList className="w-full grid grid-cols-4">
-                <TabsTrigger value="categories" className="text-xs">Categories</TabsTrigger>
-                <TabsTrigger value="subjects" className="text-xs">Subjects</TabsTrigger>
-                <TabsTrigger value="chapters" className="text-xs">Chapters</TabsTrigger>
-                <TabsTrigger value="content" className="text-xs">Content</TabsTrigger>
-              </TabsList>
-              <div className="mt-6">
-                <TabsContent value="categories"><AdminCategories /></TabsContent>
-                <TabsContent value="subjects"><AdminSubjects /></TabsContent>
-                <TabsContent value="chapters"><AdminChapters /></TabsContent>
-                <TabsContent value="content"><AdminContent /></TabsContent>
-              </div>
-            </Tabs>
-          </CardContent>
-        </Card>
+        <div className="glass-card rounded-xl p-4 md:p-6">
+          <Tabs defaultValue="categories">
+            <TabsList className="w-full grid grid-cols-4">
+              <TabsTrigger value="categories" className="text-xs">Categories</TabsTrigger>
+              <TabsTrigger value="subjects" className="text-xs">Subjects</TabsTrigger>
+              <TabsTrigger value="chapters" className="text-xs">Chapters</TabsTrigger>
+              <TabsTrigger value="content" className="text-xs">Content</TabsTrigger>
+            </TabsList>
+            <div className="mt-6">
+              <TabsContent value="categories"><AdminCategories /></TabsContent>
+              <TabsContent value="subjects"><AdminSubjects /></TabsContent>
+              <TabsContent value="chapters"><AdminChapters /></TabsContent>
+              <TabsContent value="content"><AdminContent /></TabsContent>
+            </div>
+          </Tabs>
+        </div>
       </div>
     </div>
   );
