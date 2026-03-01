@@ -85,7 +85,7 @@ export default function StudentDashboard() {
             <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <BookOpen className="h-4 w-4 text-primary" />
             </div>
-            <span className="font-semibold text-sm">EduPlatform</span>
+            <span className="font-semibold text-sm">EDUFORFREE<sup className="text-[8px]">™</sup></span>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
@@ -134,7 +134,7 @@ export default function StudentDashboard() {
                 <div className="h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
                   <BookOpen className="h-7 w-7 md:h-8 md:w-8 text-primary" />
                 </div>
-                <h2 className="text-base md:text-lg font-semibold mb-2">Welcome to EduPlatform</h2>
+                <h2 className="text-base md:text-lg font-semibold mb-2">Welcome to EDUFORFREE™</h2>
                 <p className="text-xs md:text-sm text-muted-foreground max-w-sm">
                   Select a lesson from the course navigation to start learning.
                 </p>

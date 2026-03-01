@@ -17,7 +17,7 @@ export default function CourseNavigation({
 }: CourseNavigationProps) {
   return (
     <div className="h-full overflow-y-auto">
-      <Accordion type="multiple" className="space-y-1">
+      <Accordion type="multiple" className="space-y-0.5">
         {categories.map((cat) => {
           const catSubjects = subjects.filter((s) => s.category_id === cat.id);
           return (
@@ -52,7 +52,7 @@ export default function CourseNavigation({
                                       {chap.name}
                                     </div>
                                   </AccordionTrigger>
-                                  <AccordionContent className="pl-2 pb-1">
+                                  <AccordionContent className="pl-2 pb-0">
                                     <div className="space-y-0.5">
                                       {chapContent.map((item) => (
                                         <button
