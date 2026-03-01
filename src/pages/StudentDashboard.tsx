@@ -134,7 +134,7 @@ export default function StudentDashboard() {
                 <div className="h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
                   <BookOpen className="h-7 w-7 md:h-8 md:w-8 text-primary" />
                 </div>
-                <h2 className="text-base md:text-lg font-semibold mb-2">Welcome to EduPlatform</h2>
+                <h2 className="text-base md:text-lg font-semibold mb-2">Welcome to EDUFORFREE™</h2>
                 <p className="text-xs md:text-sm text-muted-foreground max-w-sm">
                   Select a lesson from the course navigation to start learning.
                 </p>
