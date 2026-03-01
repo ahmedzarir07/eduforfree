@@ -85,7 +85,7 @@ export default function StudentDashboard() {
             <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <BookOpen className="h-4 w-4 text-primary" />
             </div>
-            <span className="font-semibold text-sm">EduPlatform</span>
+            <span className="font-semibold text-sm">EDUFORFREE<sup className="text-[8px]">™</sup></span>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
