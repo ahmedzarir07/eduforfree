@@ -17,7 +17,7 @@ export default function CourseNavigation({
 }: CourseNavigationProps) {
   return (
     <div className="h-full overflow-y-auto">
-      <Accordion type="multiple" className="space-y-1">
+      <Accordion type="multiple" className="space-y-0.5">
         {categories.map((cat) => {
           const catSubjects = subjects.filter((s) => s.category_id === cat.id);
           return (
