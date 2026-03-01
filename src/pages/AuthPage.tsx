@@ -48,7 +48,7 @@ export default function AuthPage() {
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
             <BookOpen className="h-7 w-7 text-primary" />
           </div>
-          <CardTitle className="text-2xl">EDUFORFREE™</CardTitle>
+          <CardTitle className="text-2xl">EduPlatform</CardTitle>
           <CardDescription>Learn, grow, and succeed</CardDescription>
         </CardHeader>
         <CardContent>
