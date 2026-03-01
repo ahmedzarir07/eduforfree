@@ -52,7 +52,7 @@ export default function CourseNavigation({
                                       {chap.name}
                                     </div>
                                   </AccordionTrigger>
-                                  <AccordionContent className="pl-2 pb-1">
+                                  <AccordionContent className="pl-2 pb-0">
                                     <div className="space-y-0.5">
                                       {chapContent.map((item) => (
                                         <button
