@@ -345,14 +345,14 @@ export default function AdminPanel() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border bg-card">
+      <header className="flex items-center justify-between px-4 md:px-6 h-14 border-b border-border/50 bg-card/80 backdrop-blur-sm sticky top-0 z-40">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="gap-1.5">
+          <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="gap-1.5 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" /> Dashboard
           </Button>
-          <span className="font-semibold text-sm">Admin Panel</span>
+          <span className="font-semibold text-sm">EduForFree Admin</span>
         </div>
-        <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 text-xs">
+        <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 text-xs text-muted-foreground hover:text-foreground">
           <LogOut className="h-3.5 w-3.5" /> Logout
         </Button>
       </header>
