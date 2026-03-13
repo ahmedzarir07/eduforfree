@@ -61,13 +61,13 @@ export default function StudentDashboard() {
 
       <div className="flex flex-1 overflow-hidden relative">
         {/* Main content area */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
+        <main className="flex-1 overflow-y-auto space-y-4">
           {activeContent ? (
             <>
               {activeContent.content_type === 'video' ? (
                 <VideoPlayer url={activeContent.url} title={activeContent.title} />
               ) : (
-                <div className="p-6 rounded-lg bg-card border border-border">
+                <div className="p-6 md:mx-4 md:mt-4 rounded-lg bg-card border border-border">
                   <h2 className="text-lg font-semibold mb-2">{activeContent.title}</h2>
                   <p className="text-sm text-muted-foreground mb-4">{activeContent.description}</p>
                   <a href={activeContent.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm">
@@ -76,18 +76,18 @@ export default function StudentDashboard() {
                 </div>
               )}
 
-              <div className="bg-card rounded-lg border border-border p-4">
+              <div className="bg-card md:rounded-lg border-y md:border-x border-border p-4 md:mx-4">
                 <h3 className="font-medium text-sm mb-1">{activeContent.title}</h3>
                 {activeContent.duration && <p className="text-xs text-muted-foreground mb-3">Duration: {activeContent.duration}</p>}
                 {activeContent.description && <p className="text-sm text-muted-foreground">{activeContent.description}</p>}
               </div>
 
-              <div className="bg-card rounded-lg border border-border p-4">
+              <div className="bg-card md:rounded-lg border-y md:border-x border-border p-4 md:mx-4 md:mb-4">
                 <NotesAndLinks contentId={activeContent.id} />
               </div>
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
+            <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center p-4">
               <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
                 <BookOpen className="h-8 w-8 text-primary" />
               </div>
