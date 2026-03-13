@@ -24,7 +24,7 @@ export default function VideoPlayer({ url, title }: VideoPlayerProps) {
   const { embedUrl } = useMemo(() => extractVideoId(url), [url]);
 
   return (
-    <div className="w-full aspect-video rounded-lg overflow-hidden bg-background border border-border">
+    <div className="w-full aspect-video md:rounded-lg overflow-hidden bg-black md:border md:border-border">
       <iframe
         src={embedUrl}
         title={title}
